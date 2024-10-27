@@ -1,14 +1,24 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../app/store";
+import { RootState, Board } from "../types";
+
 export const Sidebar: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const boards = useSelector((state: RootState) => state.boards.boards);
 
+  const renderBoardButton = (board: Board) => (
+    <button
+      key={board.id}
+      className="w-full text-left px-3 py-2 rounded hover:bg-gray-700"
+    >
+      {board.title}
+    </button>
+  );
+
   return (
     <div className="w-64 bg-gray-800 text-white h-screen fixed left-0 top-0">
       <div className="p-4">
-        {user ? (
+        {user && (
           <div className="flex items-center space-x-3 mb-6">
             {user.avatar ? (
               <img
@@ -26,20 +36,13 @@ export const Sidebar: React.FC = () => {
               <p className="text-sm text-gray-400">{user.email}</p>
             </div>
           </div>
-        ) : null}
+        )}
 
         <div className="space-y-2">
           <h3 className="text-xs font-semibold text-gray-400 uppercase">
             Your Boards
           </h3>
-          {boards.map((board) => (
-            <button
-              key={board.id}
-              className="w-full text-left px-3 py-2 rounded hover:bg-gray-700"
-            >
-              {board.title}
-            </button>
-          ))}
+          {boards.map(renderBoardButton)}
         </div>
       </div>
     </div>

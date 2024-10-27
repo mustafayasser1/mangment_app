@@ -3,17 +3,17 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch } from "react-redux";
 import { addTask, updateTask } from "../features/tasks/tasksSlice";
-import type { Task } from "../types";
-import { taskSchema, type TaskFormData } from "../schemas/taskSchema";
+import type { Task, TaskFormData } from "../types";
+import { taskSchema } from "../schemas/taskSchema";
 
 interface TaskFormProps {
-  task?: Task;
+  task?: Task | null;
   onSubmit?: () => void;
-  currentUserId: string; // Add this prop to get the current user's ID
+  currentUserId: string;
 }
 
 export const TaskForm: React.FC<TaskFormProps> = ({
-  task,
+  task = null,
   onSubmit,
   currentUserId,
 }) => {
@@ -26,12 +26,12 @@ export const TaskForm: React.FC<TaskFormProps> = ({
     reset,
   } = useForm<TaskFormData>({
     resolver: yupResolver(taskSchema),
-    defaultValues: task || {
+    defaultValues: task ?? {
       title: "",
       description: "",
       priority: "Medium",
       state: "todo",
-      image: "",
+      image: null,
     },
   });
 
@@ -44,7 +44,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({
           createdAt: task.createdAt,
           ownerId: task.ownerId,
           assignedUsers: task.assignedUsers,
-        })
+        } as Task)
       );
     } else {
       dispatch(
@@ -53,8 +53,8 @@ export const TaskForm: React.FC<TaskFormProps> = ({
           id: Date.now().toString(),
           createdAt: new Date().toISOString(),
           ownerId: currentUserId,
-          assignedUsers: [currentUserId], // Initially assign to creator
-        })
+          assignedUsers: [currentUserId],
+        } as Task)
       );
       reset();
     }

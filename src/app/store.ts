@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "../features/auth/authSlice";
 import tasksReducer from "../features/tasks/tasksSlice";
-import boardsReducer from "../features/tasks/tasksSlice";
+import boardsReducer from "../features/boards/boardsSlice";
 import usersReducer from "../features/users/usersSlice";
 
 export const store = configureStore({

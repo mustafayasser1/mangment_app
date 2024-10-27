@@ -2,13 +2,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Task } from "../../types";
 
 interface TasksState {
-  tasks: Task[];
+  tasks: Task[]; // Changed from task: Task | null to tasks: Task[]
   status: "idle" | "loading" | "failed";
   error: string | null;
 }
 
 const initialState: TasksState = {
-  tasks: [],
+  tasks: [], // This matches the interface now
   status: "idle",
   error: null,
 };

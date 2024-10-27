@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Task } from "./types";
+import { Task, RootState } from "./types";
 import { TaskForm } from "./components/TaskForm";
 import { Board } from "./components/Board";
 import { Sidebar } from "./components/Sidebar";
-import { RootState } from "./app/store";
 import { Login } from "./components/auth/Login";
 import { setTaskStatus, deleteTask } from "./features/tasks/tasksSlice";
 
@@ -13,15 +12,15 @@ const App: React.FC = () => {
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
 
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated
+  const { isAuthenticated, user } = useSelector(
+    (state: RootState) => state.auth
   );
   const currentBoard = useSelector(
     (state: RootState) => state.boards.currentBoard
   );
   const tasks = useSelector((state: RootState) => state.tasks.tasks);
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !user) {
     return <Login />;
   }
 
@@ -55,6 +54,7 @@ const App: React.FC = () => {
                   setEditingTask(null);
                   setIsFormVisible(false);
                 }}
+                currentUserId={user.id}
               />
             </div>
           )}

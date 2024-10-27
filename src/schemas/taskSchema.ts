@@ -1,7 +1,8 @@
+// schemas/taskSchema.ts
 import * as yup from "yup";
-import type { Task } from "../types";
+import type { TaskFormData } from "../types";
 
-const taskSchema = yup.object().shape({
+export const taskSchema = yup.object().shape({
   title: yup
     .string()
     .required("Title is required")
@@ -16,29 +17,19 @@ const taskSchema = yup.object().shape({
 
   image: yup
     .string()
-    .nullable() // Make it optional
-    .transform((value) => (value === "" ? null : value)) // Transform empty string to null
-    .url("Must be a valid URL when provided"), // Only validate URL if value exists
+    .nullable()
+    .transform((value) => (value === "" ? null : value))
+    .url("Must be a valid URL when provided"),
 
   priority: yup
-    .string()
-    .oneOf(["Low", "Medium", "High"], "Invalid priority")
+    .mixed<TaskFormData["priority"]>()
+    .oneOf(["Low", "Medium", "High"] as const, "Invalid priority")
     .required("Priority is required"),
 
   state: yup
-    .string()
-    .oneOf(["todo", "doing", "done"], "Invalid state")
+    .mixed<TaskFormData["state"]>()
+    .oneOf(["todo", "doing", "done"] as const, "Invalid state")
     .required("State is required"),
-});
+}) as yup.ObjectSchema<TaskFormData>;
 
-// Form data type that matches the schema
-interface TaskFormData {
-  title: string;
-  description: string;
-  image: string | null; // Match the schema's nullable type
-  priority: "Low" | "Medium" | "High";
-  state: "todo" | "doing" | "done";
-}
-
-export { taskSchema };
 export type { TaskFormData };

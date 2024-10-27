@@ -1,7 +1,8 @@
 import React, { useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../app/store";
-import { Task, deleteTask, setTaskStatus } from "../features/tasks/tasksSlice";
+import { RootState, Task } from "../types"; // Import Task from types
+
+import { deleteTask, setTaskStatus } from "../features/tasks/tasksSlice";
 
 interface TaskListProps {
   onEditTask: (task: Task) => void;
@@ -38,11 +39,17 @@ export const TaskList: React.FC<TaskListProps> = ({ onEditTask }) => {
   const renderTaskCard = (task: Task) => (
     <div key={task.id} className="bg-white rounded-lg shadow p-4 mb-4">
       <div className="relative">
-        <img
-          src={task.image}
-          alt={task.title}
-          className="w-full h-48 object-cover rounded-md mb-4"
-        />
+        {task.image ? (
+          <img
+            src={task.image}
+            alt={task.title}
+            className="w-full h-48 object-cover rounded-md mb-4"
+          />
+        ) : (
+          <div className="w-full h-48 bg-gray-200 rounded-md mb-4 flex items-center justify-center text-gray-400">
+            No Image
+          </div>
+        )}
         <span
           className={`absolute top-2 right-2 px-2 py-1 rounded text-sm ${
             task.priority === "High"
